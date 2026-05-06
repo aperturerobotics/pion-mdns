@@ -336,7 +336,7 @@ func NewServer(
 	ifaces := cfg.interfaces
 	if ifaces == nil {
 		var err error
-		ifaces, err = net.Interfaces()
+		ifaces, err = mdnsInterfaces()
 		if err != nil {
 			return nil, err
 		}
@@ -349,7 +349,7 @@ func NewServer(
 			return nil, err
 		}
 
-		unicastConnV4, err := net.ListenUDP("udp4", addr4)
+		unicastConnV4, err := mdnsListenUDP("udp4", addr4)
 		if err != nil {
 			log.Warnf(
 				"[%s] failed to listen on unicast IPv4 %s: %s; will not be able to receive unicast responses on IPv4",
@@ -367,7 +367,7 @@ func NewServer(
 			return nil, err
 		}
 
-		unicastConnV6, err := net.ListenUDP("udp6", addr6)
+		unicastConnV6, err := mdnsListenUDP("udp6", addr6)
 		if err != nil {
 			log.Warnf(
 				"[%s] failed to listen on unicast IPv6 %s: %s; will not be able to receive unicast responses on IPv6",
@@ -397,7 +397,7 @@ func NewServer(
 			continue
 		}
 
-		addrs, err := ifc.Addrs()
+		addrs, err := mdnsInterfaceAddrs(ifc)
 		if err != nil {
 			continue
 		}
